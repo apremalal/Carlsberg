@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<title></title>
+
+<!-- <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css"/> -->
+<link rel="stylesheet" href="themes/greenA.min.css" />
+<link rel="stylesheet"
+	href="js/jquery.mobile.structure-1.3.0.min.css" />
+<link rel="stylesheet" href="css/index.css" />
+<!--<link rel="stylesheet" href="js/jquery.mobile-1.3.0.min.css" />-->
+
+<script type="text/javascript" src="js/jquery-1.5.min.js"></script>
+<script type="text/javascript" src="js/jquery.mobile-1.3.0.min.js"></script>
+<script type="text/javascript"
+	src="js/ui-map/min/jquery.ui.map.full.min.js"></script>
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
+
+<!-- Jquery from CDN-->
+<!-- <script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script> -->
+
+<!--local jquery -->
+
+
+<script type="text/javascript" src="js/cordova-2.4.0.js" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+	function onLoad() {
+        document.addEventListener("deviceready", onDeviceReady, false);
+    }
+
+    // Cordova is loaded and it is now safe to call Cordova methods
+    //
+    function onDeviceReady() {
+        // Register the event listener
+        document.addEventListener("backbutton", onBackKeyDown, false);
+    }
+
+    // Handle the back button
+    //
+    function onBackKeyDown(e) {
+    	if($.mobile.activePage.is('#homePage')){
+	        e.preventDefault();
+	        navigator.app.exitApp();
+	    }
+	    else {
+	        navigator.app.backHistory()
+	    }
+    }
+</script>
+<script src="js/index.js"></script>
+
+</head>
+<body onload="onLoad();">
+	<!-- Home -->
+	<div data-role="page" data-theme="a" id="homePage">
+		<div class="header" id="homeHeader"></div>
+		<div class="mainmenu">
+			<ul data-role="listview" data-inset="true" data-theme="a">
+				<li data-role="list-divider" data-icon="arrow-r">Menu</li>
+				<li data-icon="arrow-r"><a href="#findpubsPage">Find Pubs</a></li>
+				<li data-icon="arrow-r"><a href="#menuPage">Beer Menu</a></li>
+				<li data-icon="arrow-r"><a href="#gamePage">Games and Deals</a></li>
+				<li data-icon="arrow-r"><a href="#historyPage">History</a></li>
+			</ul>
+		</div>
+	</div>
+
+
+	<div data-role="page" id="findpubsPage" data-fullscreen="true">
+		<div data-role="header" data-position="fixed" data-tap-toggle="false">
+			<a id="refresh" href="#findpubsPage" data-iconpos="notext"
+				data-icon="refresh" class="ui-btn-right"></a> <span class="ui-title"></span>
+			<div class="ui-btn-left">
+				<a href="#placesLstPage" data-role="button" id='listBtn'
+					onclick="createListView();">List</a>
+			</div>
+		</div>
+
+		<a id="lnkDialog" href="#dialog1" data-rel="dialog"
+			data-transition="pop" style="display: none;"></a>
+		<div id="map_content">
+			<div id="map_canvas"
+				style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0;"></div>
+		</div>
+
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false"
+			data-id="foo">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#homePage" data-prefetch="true" id="home">Home</a></li>
+					<li><a href="#findpubsPage" rel="external"
+						class="ui-btn-active ui-state-persist">Find</a></li>
+					<li><a href="#menuPage" data-prefetch="true"> Menu</a></li>
+					<li><a href="#gamePage" data-prefetch="true">Games</a></li>
+					<li><a href="#historyPage" data-prefetch="true">History</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+
+	<!-- List view page-->
+	<div data-role="page" id="placesLstPage">
+		<div data-role="header" data-position="fixed" data-tap-toggle="false">
+			<span class="ui-title"></span>
+			<div class="ui-btn-left">
+				<a href="#findpubsPage" data-role="button" data-direction="reverse"
+					rel="external">Map</a>
+			</div>
+		</div>
+		<div data-role="content" id="placesList">
+			<ul id="result-listview" class="listview" data-role="listview"
+				data-theme="a">
+			</ul>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false"
+			data-id="foo">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#homePage" data-prefetch="true">Home</a></li>
+					<li><a href="#findpubsPage" rel="external"
+						class="ui-btn-active ui-state-persist">Find</a></li>
+					<li><a href="#menuPage" data-prefetch="true">Menu</a></li>
+					<li><a href="#gamePage" data-prefetch="true">Games</a></li>
+					<li><a href="#historyPage" data-prefetch="true">History</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+
+
+	<div data-role="page" id="dialog1">
+		<div data-role="header">
+			<h1>Your Message</h1>
+		</div>
+		<div data-role="content" id="text"></div>
+	</div>
+
+	<div data-role="page" id="menuPage">
+		<div data-role="content">
+			<ul data-role="listview" data-filter="true" data-filter-theme="b">
+				<li><a href="#cblightPage">Carlsberg Light</a></li>
+				<li><a href="audi.html">Carlsberg Edge</a></li>
+				<li><a href="bmw.html">Carlsberg Special brew</a></li>
+				<li><a href="bmw.html">Carlsberg Chill</a></li>
+				<li><a href="bmw.html">Lion Stout</a></li>
+				<li><a href="bmw.html">Irish Dark</a></li>
+				<li><a href="bmw.html">Lion Lager</a></li>
+			</ul>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false"
+			data-id="foo">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#homePage" data-prefetch="true">Home</a></li>
+					<li><a href="#findpubsPage" rel="external">Find</a></li>
+					<li><a href="#menuPage" class="ui-btn-active ui-state-persist"
+						data-prefetch="true">Menu</a></li>
+					<li><a href="#gamePage" data-prefetch="true">Games</a></li>
+					<li><a href="#historyPage" data-prefetch="true">History</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+
+
+	<div data-role="page" id="gamePage">
+		<div data-role="content"></div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false"
+			data-id="foo">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#homePage" data-prefetch="true">Home</a></li>
+					<li><a href="#findpubsPage" rel="external">Find</a></li>
+					<li><a href="#menuPage" data-prefetch="true">Menu</a></li>
+					<li><a href="#gamePage" class="ui-btn-active ui-state-persist"
+						data-prefetch="true">Games</a></li>
+					<li><a href="#historyPage" data-prefetch="true">History</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+
+	<div data-role="page" id="historyPage">
+		<div data-role="content"></div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false"
+			data-id="foo">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#homePage" data-prefetch="true">Home</a></li>
+					<li><a href="#findpubsPage" rel="external">Find</a></li>
+					<li><a href="#menuPage" data-prefetch="true">Menu</a></li>
+					<li><a href="#gamePage" data-prefetch="true">Games</a></li>
+					<li><a href="#historyPage"
+						class="ui-btn-active ui-state-persist" data-prefetch="true">History</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<div data-role="page" id="cblightPage">
+		<div data-role="header" data-position="fixed" data-tap-toggle="false">
+			<span class="ui-title"></span>
+			<div class="ui-btn-left">
+				<a href="#menuPage" data-role="button" data-direction="reverse"
+					rel="external" data-icon="back">Back</a>
+			</div>
+		</div>
+		<div data-role="content">This page is about Carlsberg Light</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false"
+			data-id="foo">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#homePage" data-prefetch="true">Home</a></li>
+					<li><a href="#findpubsPage" rel="external">Find</a></li>
+					<li><a href="#menuPage" data-prefetch="true"
+						class="ui-btn-active ui-state-persist">Menu</a></li>
+					<li><a href="#gamePage" data-prefetch="true">Games</a></li>
+					<li><a href="#historyPage" data-prefetch="true">History</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+</body>
+</html>
